@@ -7,6 +7,8 @@ jobs:
   release:
     name: Add binaries to release
     runs-on: ${{ matrix.os }}
+    container:
+      image: swift:5.2
     strategy:
       matrix:
         include:
