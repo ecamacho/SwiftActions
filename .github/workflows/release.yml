@@ -6,7 +6,9 @@ on:
 jobs:
   release:
     name: Add binaries to release
-    runs-on: ${{matrix.os}}
+    runs-on: ${{ matrix.os }}
+    container:
+      image: swift:5.2
     strategy:
       matrix:
         include:
@@ -20,12 +22,12 @@ jobs:
       - name: Build
         run: LANG=en_US.UTF-8 LC_CTYPE=UTF-8  swift build -c release
       - name: Rename
-        run: mv .build/release/SwiftActions ./${{matrix.asset_name}}
+        run: mv .build/release/SwiftActions ./${{ matrix.asset_name }}
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v1-release
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./${{matrix.asset_name}}
-          asset_name: ${{matrix.asset_name}}
+          file: ./${{ matrix.asset_name }}
+          asset_name: ${{ matrix.asset_name }}-${{ github.ref  }}
           tag: ${{ github.ref }}
           overwrite: true
