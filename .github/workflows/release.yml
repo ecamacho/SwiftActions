@@ -1,0 +1,31 @@
+name: release_binaries
+on:
+  release:
+    types: created
+
+jobs:
+  release:
+    name: Add binaries to release
+    runs-on: ${{matrix.os}}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            asset_name: swiftactions-linux-amd64
+          - os: macOS-latest
+            asset_name: swiftactions-macos
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Build
+        run: LANG=en_US.UTF-8 LC_CTYPE=UTF-8  swift build -c release
+      - name: Rename
+        run: mv .build/release/SwiftActions ./${{matrix.asset_name}}
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v1-release
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./${{matrix.asset_name}}
+          asset_name: ${{matrix.asset_name}}
+          tag: ${{ github.ref }}
+          overwrite: true
