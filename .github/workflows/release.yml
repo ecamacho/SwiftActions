@@ -37,8 +37,12 @@ jobs:
         uses: actions/checkout@v1
       - name: Build
         run: LANG=en_US.UTF-8 LC_CTYPE=UTF-8 swift build -c release
+      - name: Print tag name
+        run: echo "::debug::$GITHUB_REF"
+      - name: Set Zip name
+        run: echo "::set-env name=ZipFilename::SwiftActions-linux-amd64-${GITHUB_REF:10}.zip"
       - name: Zip release
-        run: "mkdir releases && zip -j releases/SwiftActions-linux-amd64-${GITHUB_REF:10}.zip .build/release/SwiftActions"
+        run: "mkdir releases && zip -j releases/$ZipFilename .build/release/SwiftActions"
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v1-release
         with:
