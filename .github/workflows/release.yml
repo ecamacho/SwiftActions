@@ -33,19 +33,20 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: swift:5.2
+    env:
+      GIT_REF: ${{ github.ref }}
     steps:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Build
         run: LANG=en_US.UTF-8 LC_CTYPE=UTF-8 swift build -c release
       - name: Zip release
-        run: "mkdir releases && zip -j releases/SwiftActions-macOS-amd64-${GIT_REF:10}.zip .build/release/SwiftActions"
+        run: "mkdir releases && zip -j releases/SwiftActions-linux-amd64-${GIT_REF:10}.zip .build/release/SwiftActions"
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v1-release
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: releases/*
           file_glob: true
-          asset_name: SwiftActions-linux-amd64-${{ github.ref }}
           tag: ${{ github.ref }}
           overwrite: true
