@@ -36,7 +36,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Install zip command
-        run: sudo apt install zip
+        run: apt install zip
       - name: Build
         run: LANG=en_US.UTF-8 LC_CTYPE=UTF-8 swift build -c release
       - name: Set tag name
