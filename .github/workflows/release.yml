@@ -42,7 +42,9 @@ jobs:
       - name: Set tag name
         run: echo ::set-env name=TAG_NAME::$(echo $GITHUB_REF | cut -c 10-)
       - name: Zip release
-        run: "mkdir releases && zip -j releases/SwiftActions-linux-amd64-$TAG_NAME .build/release/SwiftActions"
+        uses: montudor/action-zip@v0.1.0
+        with:
+          args: "mkdir releases && zip -j releases/SwiftActions-linux-amd64-$TAG_NAME .build/release/SwiftActions"
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v1-release
         with:
