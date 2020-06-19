@@ -9,6 +9,7 @@ jobs:
     runs-on: macOS-latest
     env:
       XCODE_VERSION: ${{ '11.4' }}
+      GIT_REF: ${{ github.ref }}
     steps:
       - name: Select Xcode
         run: "sudo xcode-select -s /Applications/Xcode_$XCODE_VERSION.app"
@@ -16,12 +17,14 @@ jobs:
         uses: actions/checkout@v1
       - name: Build
         run: swift build -c release
+      - name: Zip release
+        run: "mkdir releases && zip -j releases/SwiftActions-macOS-amd64-${GIT_REF:10}.zip .build/release/SwiftActions"
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v1-release
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: .build/release/SwiftActions
-          asset_name: SwiftActions-macOS-${{ github.ref }}
+          file: releases/*
+          file_glob: true
           tag: ${{ github.ref }}
           overwrite: true
 
@@ -35,11 +38,14 @@ jobs:
         uses: actions/checkout@v1
       - name: Build
         run: LANG=en_US.UTF-8 LC_CTYPE=UTF-8 swift build -c release
+      - name: Zip release
+        run: "mkdir releases && zip -j releases/SwiftActions-macOS-amd64-${GIT_REF:10}.zip .build/release/SwiftActions"
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v1-release
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: .build/release//SwiftActions
+          file: releases/*
+          file_glob: true
           asset_name: SwiftActions-linux-amd64-${{ github.ref }}
           tag: ${{ github.ref }}
           overwrite: true
